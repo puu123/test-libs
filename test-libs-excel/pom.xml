@@ -44,14 +44,12 @@
 <dependency>
     <groupId>com.github.mygreen</groupId>
     <artifactId>xlsmapper</artifactId>
-    <version>1.4.3</version>
+    <version>1.4.2</version>
 </dependency>
 <!-- https://mvnrepository.com/artifact/javassist/javassist -->
-<dependency>
-    <groupId>javassist</groupId>
-    <artifactId>javassist</artifactId>
-    <version>3.11.0.GA</version>
-</dependency>
+
+
+
 
 <!-- テスト -->
 		<dependency>
@@ -166,23 +164,7 @@
 					<encoding>${encoding}</encoding>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>${version.maven-eclipse-plugin}</version>
-				<configuration>
-					<additionalConfig>
-						<file>
-							<name>.settings/org.eclipse.jdt.core.prefs</name>
-							<location>eclipse/org.eclipse.jdt.core.prefs</location>
-						</file>
-						<file>
-							<name>.settings/org.eclipse.jdt.ui.prefs</name>
-							<location>eclipse/org.eclipse.jdt.ui.prefs</location>
-						</file>
-					</additionalConfig>
-				</configuration>
-			</plugin>
+
 		</plugins>
 	</build>
 
