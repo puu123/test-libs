@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<annotations>
+    <class name="xlsmapper.Hoge">
+        <annotation name="com.gh.mygreen.xlsmapper.annotation.XlsSheet">
+            <attribute name="number">0</attribute>
+        </annotation>
+        <field name="list">
+          <annotation name="com.gh.mygreen.xlsmapper.annotation.XlsHorizontalRecords">
+            <attribute name="headerRow">4</attribute>
+            <attribute name="headerColumn">0</attribute>
+          </annotation>
+        </field>
+    </class>
+</annotations>

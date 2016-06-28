@@ -16,7 +16,13 @@
 		<encoding>UTF-8</encoding>
 		<java.version>1.8</java.version>
 	</properties>
-
+<repositories>
+  <repository>
+    <id>amateras</id>
+    <name>Project Amateras Maven2 Repository</name>
+    <url>http://amateras.sourceforge.jp/mvn/</url>
+  </repository>
+</repositories>
 	<dependencies>
 
 <!-- POI -->
@@ -48,7 +54,11 @@
 </dependency>
 <!-- https://mvnrepository.com/artifact/javassist/javassist -->
 
-
+  <dependency>
+    <groupId>jp.sf.amateras.xlsbeans</groupId>
+    <artifactId>xlsbeans</artifactId>
+    <version>1.2.5</version>
+  </dependency>
 
 
 <!-- テスト -->
@@ -143,14 +153,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>${version.maven-resources-plugin}</version>
-				<configuration>
-					<encoding>${encoding}</encoding>
-				</configuration>
-			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>

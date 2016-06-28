@@ -1,21 +1,30 @@
 package poi;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.SpreadsheetVersion;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.WorkbookUtil;
-import org.junit.Before;
+
+
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
+import com.github.mygreen.cellformatter.POICellFormatter;
 
 public class XlsWriteTest {
 
@@ -32,6 +41,7 @@ public class XlsWriteTest {
 			Sheet sheet1 = wb.createSheet(safeName);
 
 			CreationHelper createHelper = wb.getCreationHelper();
+			//createHelper.createFormulaEvaluator().evaluate(cell)
 			short style = createHelper.createDataFormat().getFormat("yyyy-mm-ddThh:mm");
 		
 			Row row = sheet1.createRow(0);
@@ -45,6 +55,91 @@ public class XlsWriteTest {
 		}
 		
 	}
+	
+	@Test
+	public void test2() throws Exception {
+
+		POICellFormatter cellFormatter = new POICellFormatter();
+		
+		Workbook wb  = WorkbookFactory.create(new File("files/poi.xls"));
+		Sheet sheet = wb.getSheetAt(0);
+		Sheet sh = wb.createSheet("abc");
+		
+
+		int j = 0;
+		for(Row row: sheet) {
+			Row row2 = sh.createRow(j++);
+			int i = 0;
+			for (Cell cell : row) {
+				Cell cell2 = row2.createCell(i++);
+				System.out.print(cellFormatter.formatAsString(cell)+"\t");
+				cloneCell(cell2, cell);
+				
+			}
+			System.out.println();
+		}
+		
+		wb.write(new FileOutputStream(new File("files/hoge.xls")));
+	}
+	
+	private static void cloneCell(Cell cNew, Cell cOld) {
+		
+		cNew.setCellComment(cOld.getCellComment());
+		cNew.setCellStyle(cOld.getCellStyle());
+
+		switch (cOld.getCellType()) {
+		case Cell.CELL_TYPE_BOOLEAN: {
+			cNew.setCellValue(cOld.getBooleanCellValue());
+			break;
+		}
+		case Cell.CELL_TYPE_NUMERIC: {
+			cNew.setCellValue(cOld.getNumericCellValue());
+			break;
+		}
+		case Cell.CELL_TYPE_STRING: {
+			cNew.setCellValue(cOld.getStringCellValue());
+			break;
+		}
+		case Cell.CELL_TYPE_ERROR: {
+			cNew.setCellValue(cOld.getErrorCellValue());
+			break;
+		}
+		case Cell.CELL_TYPE_FORMULA: {
+			cNew.setCellFormula(cOld.getCellFormula());
+			break;
+		}
+		}
+	}
+	
+	
+	@Test
+	public void test3() throws Exception {
+		update(new File("files/a.xls"));
+		update(new File("files/a.xlsx"));
+	}
+	
+	public static void update(File file) throws Exception {
+		
+		InputStream is = new FileInputStream(file);
+		Workbook wb = WorkbookFactory.create(is); // メモリ上に展開
+		is.close(); // ここで入力ストリームを閉じる
+
+		// 編集したいシート、列、セルを指定
+		Sheet s = wb.getSheetAt(0);
+		Row r = s.getRow(0);
+		Cell c = r.getCell(0);
+		
+		// この場合B2セルに「あいう」をセット
+		c.setCellValue("あいう");
+		c.setCellType(Cell.CELL_TYPE_STRING);
+
+		// 編集した内容の書き出し
+		OutputStream os = new FileOutputStream(file);
+		wb.write(os);
+		os.close();
+	}	
+	
+	
 	private void setDate(Cell cell, Date date, Workbook wb) {
 		CreationHelper createHelper = wb.getCreationHelper();
 		CellStyle cellStyle = wb.createCellStyle();

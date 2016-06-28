@@ -1,11 +1,13 @@
-package xlsmapper;
+package xlsbeans;
 
 import com.gh.mygreen.xlsmapper.annotation.XlsColumn;
 
+import net.java.amateras.xlsbeans.annotation.Column;
+
 public class Bar {
 
-	@XlsColumn(columnName = "id")
-	String name;
+	@Column(columnName = "id")
+	public String name;
 
 	@Override
 	public String toString() {

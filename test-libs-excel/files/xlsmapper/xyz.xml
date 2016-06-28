@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<annotations>
+    <class name="xlsbeans.Hoge">
+        <annotation name="net.java.amateras.xlsbeans.annotation.Sheet">
+            <attribute name="number">0</attribute>
+        </annotation>
+        <field name="list">
+          <annotation name="net.java.amateras.xlsbeans.annotation.HorizontalRecords">
+            <attribute name="headerRow">4</attribute>
+            <attribute name="headerColumn">0</attribute>
+          </annotation>
+        </field>
+    </class>
+</annotations>
