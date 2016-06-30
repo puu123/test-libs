@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.chrono.MinguoEra;
 import java.util.Date;
+import java.util.function.Consumer;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.SpreadsheetVersion;
@@ -13,6 +15,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Row.MissingCellPolicy;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -82,6 +85,76 @@ public class XlsWriteTest {
 		wb.write(new FileOutputStream(new File("files/hoge.xls")));
 	}
 	
+	@Test
+	public void test4() throws Exception {
+
+		Workbook workbook  = WorkbookFactory.create(new File("files/aaa.xls"));
+		Sheet sheet = workbook.getSheetAt(0);
+		Copy copy = new Copy();
+		copy.workbook = workbook;
+		copy.sheet = sheet;
+		// (開始行 startY 123,　開始列 startX abc) (終了行 endY 123,　終了列 endX abc)
+		copy.copyCellArea(0, 1, 9, 3, 0, 2);
+		workbook.write(new FileOutputStream(new File("files/bbb.xls")));
+	}
+	
+	//列の挿入
+	@Test
+	public void test5() throws Exception {
+
+		Workbook workbook  = WorkbookFactory.create(new File("files/aaa.xls"));
+		Sheet sheet = workbook.getSheetAt(0);
+				
+		int col = 5;
+		sheet.forEach(row -> {
+			int last = row.getLastCellNum();
+			for (int i = last; i >= col; i--) {
+				Cell srcCell = row.getCell(i,   MissingCellPolicy.CREATE_NULL_AS_BLANK);
+				Cell dstCell = row.getCell(i+1, MissingCellPolicy.CREATE_NULL_AS_BLANK);
+				cloneCell(dstCell, srcCell);
+			}
+			Cell cell = row.getCell(col, MissingCellPolicy.CREATE_NULL_AS_BLANK);	
+			cell.setCellType(Cell.CELL_TYPE_BLANK);
+		});
+		
+		workbook.write(new FileOutputStream(new File("files/bbb.xls")));
+	}
+	
+	//行の挿入
+	@Test
+	public void test6() throws Exception {
+
+		Workbook workbook  = WorkbookFactory.create(new File("files/aaa.xls"));
+		Sheet sheet = workbook.getSheetAt(0);
+		
+		int rowNum = 0;
+		int last = sheet.getLastRowNum();
+		if (rowNum <= last) {
+			sheet.shiftRows(rowNum, sheet.getLastRowNum(), 1);
+		} else {
+			sheet.createRow(rowNum);
+		}
+		
+		workbook.write(new FileOutputStream(new File("files/bbb.xls")));
+	}
+	
+	public static class InsertColumn implements Consumer<Row> {
+		
+		int column;
+		
+		public InsertColumn(int i) {
+			column = i;
+		}
+		
+		@Override
+		public void accept(Row row) {
+		  Cell cell = row.getCell(column, MissingCellPolicy.CREATE_NULL_AS_BLANK);	
+		  cell.setCellValue("NULL");
+		}
+	}
+		
+	
+	
 	private static void cloneCell(Cell cNew, Cell cOld) {
 		
 		cNew.setCellComment(cOld.getCellComment());
@@ -149,6 +222,12 @@ public class XlsWriteTest {
 		cellStyle.setDataFormat((short)0xE);
 		cell.setCellStyle(cellStyle);
 	}
+	
+	
+	
+	
+	
+	
 	
 /*
 	0, "General"
